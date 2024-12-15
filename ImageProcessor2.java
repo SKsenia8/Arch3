@@ -1,21 +1,35 @@
-import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImage; // Импортируем класс BufferedImage для работы с изображениями
 
-public class ImageProcessor {
+public class ImageProcessor { // Объявляем класс ImageProcessor, который будет обрабатывать изображения
+
+    // Метод для инвертирования цветов изображения
     public BufferedImage invertColors(BufferedImage image) {
+        // Получаем ширину изображения
         int width = image.getWidth();
+        // Получаем высоту изображения
         int height = image.getHeight();
+        // Создаем новое изображение с теми же размерами и типом, что и исходное
         BufferedImage invertedImage = new BufferedImage(width, height, image.getType());
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+        // Проходим по каждому пикселю изображения
+        for (int y = 0; y < height; y++) { // Перебираем строки (высоту)
+            for (int x = 0; x < width; x++) { // Перебираем столбцы (ширину)
+                // Получаем цвет пикселя в формате ARGB (Alpha(прозрачность), Red, Green, Blue)
                 int rgba = image.getRGB(x, y);
-                int alpha = (rgba >> 24) & 0xff;
-                int red = 255 - ((rgba >> 16) & 0xff);
-                int green = 255 - ((rgba >> 8) & 0xff);
-                int blue = 255 - (rgba & 0xff);
+                // Извлекаем значение альфа-канала (прозрачности) из ARGB
+                int alpha = (rgba >> 24) & 0xff; // Сдвигаем на 24 бита вправо и маскируем с помощью 0xff - используется для масировки и извлечения значений цветовых каналов
+                // Инвертируем значение красного канала
+                int red = 255 - ((rgba >> 16) & 0xff); // Сдвигаем на 16 бит вправо и маскируем с помощью 0xff
+                // Инвертируем значение зеленого канала
+                int green = 255 - ((rgba >> 8) & 0xff); // Сдвигаем на 8 бит вправо и маскируем с помощью 0xff
+                // Инвертируем значение синего канала
+                int blue = 255 - (rgba & 0xff); // Маскируем с помощью 0xff для получения значения синего канала
+                // Устанавливаем новый цвет пикселя в инвертированное изображение
                 invertedImage.setRGB(x, y, (alpha << 24) | (red << 16) | (green << 8) | blue);
+                // Объединяем альфа, красный, зеленый и синий каналы в одно целое значение ARGB
             }
         }
+        // Возвращаем инвертированное изображение
         return invertedImage;
     }
 }
